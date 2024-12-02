@@ -7,4 +7,4 @@ COMO PROSSEGUIR:
   - fazer o menu de configurações
   - documentar o código
   - fazer o read-me do código explicando toda a fisica envolvida
-  - colocar no padrão de implementação desejado oela monitora
+  - colocar no padrão de implementação desejado pela monitora
