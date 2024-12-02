@@ -1,6 +1,7 @@
 import pygame, sys
 from pygame.locals import *
 from random import randint
+
 import math
 
 # Inicialização do Pygame
@@ -12,7 +13,7 @@ fpsClock = pygame.time.Clock()
 # Definindo os parâmetros iniciais
 N = 10
 V_MAX = 5
-V_MIN = -5
+V_MIN = 0
 MASS_MIN = 20
 MASS_MAX = 40
 RATIO = 1
@@ -140,16 +141,65 @@ def menu_inicial():
                     pygame.quit()
                     sys.exit()
 
-
 def tela_configuracoes():
-    global MASS_MIN, MASS_MAX, V_MIN, V_MAX
+    global MASS_MIN, MASS_MAX, V_MIN, V_MAX, N
     font = pygame.font.Font(None, 48)
-    texto_massa = font.render(f"Massa: {MASS_MIN}-{MASS_MAX}", True, (255, 255, 255))
-    texto_velocidade = font.render(f"Velocidade: {V_MIN}-{V_MAX}", True, (255, 255, 255))
-    window.fill((0, 0, 0))
-    window.blit(texto_massa, (WIDTH // 4, LENGTH // 3))
-    window.blit(texto_velocidade, (WIDTH // 4, LENGTH // 2))
-    pygame.display.update()
+    input_font = pygame.font.Font(None, 36)
+    inputs = {
+        "MASS_MIN": MASS_MIN,
+        "MASS_MAX": MASS_MAX,
+        "V_MIN": V_MIN,
+        "V_MAX": V_MAX,
+        "N": N
+    }
+    selected = 0
+    keys = list(inputs.keys())
+
+    def render_config():
+        window.fill((0, 0, 0))
+        y_pos = LENGTH // 4
+        for i, key in enumerate(keys):
+            color = (255, 255, 255) if i == selected else (150, 150, 150)
+            value_text = input_font.render(f"{key}: {inputs[key]}", True, color)
+            window.blit(value_text, (WIDTH // 4, y_pos))
+            y_pos += 50
+
+        instruction_text = font.render("Use ↑/↓ para navegar, ←/→ para ajustar, ENTER para salvar", True, (255, 255, 255))
+        window.blit(instruction_text, (WIDTH // 8, LENGTH - 100))
+        pygame.display.update()
+
+    render_config()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    return  # Retorna ao menu principal
+                elif event.key == K_UP:
+                    selected = (selected - 1) % len(keys)
+                elif event.key == K_DOWN:
+                    selected = (selected + 1) % len(keys)
+                elif event.key == K_LEFT:
+                    if keys[selected] == "N":
+                        inputs[keys[selected]] = max(1, inputs[keys[selected]] - 1)
+                    elif keys[selected].startswith("MASS"):
+                        inputs[keys[selected]] = max(1, inputs[keys[selected]] - 1)
+                    elif keys[selected].startswith("V"):
+                        inputs[keys[selected]] = max(0, inputs[keys[selected]] - 1)
+                elif event.key == K_RIGHT:
+                    inputs[keys[selected]] += 1
+                elif event.key == K_RETURN:
+                    MASS_MIN = inputs["MASS_MIN"]
+                    MASS_MAX = max(MASS_MIN, inputs["MASS_MAX"])  # Garante que MASS_MAX >= MASS_MIN
+                    V_MIN = inputs["V_MIN"]
+                    V_MAX = max(V_MIN, inputs["V_MAX"])  # Garante que V_MAX >= V_MIN
+                    N = inputs["N"]
+                    return  # Retorna ao menu principal
+        render_config()
+
 
 def loop_jogo():
     global N, V_MAX, V_MIN, MASS_MAX, MASS_MIN
