@@ -125,6 +125,22 @@ def menu_inicial():
     window.blit(texto_esc, (WIDTH // 4, LENGTH // 1.5))  # Adicionando a legenda
     pygame.display.update()
 
+    # Gerenciando eventos no menu inicial
+    while True:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_RETURN:  # Enter para iniciar o jogo
+                    return "iniciar"
+                if event.key == K_c:  # C para configurações
+                    return "configurar"
+                if event.key == K_ESCAPE:  # ESC para sair
+                    pygame.quit()
+                    sys.exit()
+
+
 def tela_configuracoes():
     global MASS_MIN, MASS_MAX, V_MIN, V_MAX
     font = pygame.font.Font(None, 48)
