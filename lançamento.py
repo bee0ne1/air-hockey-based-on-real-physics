@@ -61,13 +61,15 @@ class Bola:
         if len(self.trajectory) > self.trajectory_lifetime:
             self.trajectory.pop(0)  # Remove o primeiro ponto quando o limite é atingido
 
-    def manageWallCollision(self):
-        # Detectando colisão com as paredes e invertendo a direção da velocidade
-        if self.pos[0] + self.radius >= WIDTH and self.v[0] > 0:
+    def manageWallCollision(self, screen_width, screen_height):
+        """
+        Gerencia a colisão com as paredes ajustando automaticamente às dimensões da tela.
+        """
+        if self.pos[0] + self.radius >= screen_width and self.v[0] > 0:
             self.v[0] *= -1
         if self.pos[0] - self.radius <= 0 and self.v[0] < 0:
             self.v[0] *= -1
-        if self.pos[1] + self.radius >= LENGTH and self.v[1] > 0:
+        if self.pos[1] + self.radius >= screen_height and self.v[1] > 0:
             self.v[1] *= -1
         if self.pos[1] - self.radius <= 0 and self.v[1] < 0:
             self.v[1] *= -1
@@ -151,6 +153,9 @@ def loop_jogo():
     while run:
         fpsClock.tick(FPS)
 
+        # Obter as dimensões atuais da janela
+        screen_width, screen_height = window.get_size()
+
         for i in range(0, N - 1, 1):
             for j in range(i + 1, N, 1):
                 checkBallCollision(list_bolas[i], list_bolas[j])
@@ -158,7 +163,7 @@ def loop_jogo():
         for bola in list_bolas:
             bola.draw()
             bola.move()
-            bola.manageWallCollision()
+            bola.manageWallCollision(screen_width, screen_height)
 
             # Desenhando a trajetória
             if len(bola.trajectory) > 1:
