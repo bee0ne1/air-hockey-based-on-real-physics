@@ -164,7 +164,7 @@ def tela_configuracoes():
             window.blit(value_text, (WIDTH // 4, y_pos))
             y_pos += 50
 
-        instruction_text = font.render("Use ↑/↓ para navegar, ←/→ para ajustar, ENTER para salvar", True, (255, 255, 255))
+        instruction_text = font.render("Use up/down para navegar, right/left para ajustar, ENTER para salvar (aperte novamente para rodar)", True, (255, 255, 255))
         window.blit(instruction_text, (WIDTH // 8, LENGTH - 100))
         pygame.display.update()
 
@@ -177,7 +177,8 @@ def tela_configuracoes():
                 sys.exit()
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
-                    return  # Retorna ao menu principal
+                    pygame.quit()
+                    sys.exit()
                 elif event.key == K_UP:
                     selected = (selected - 1) % len(keys)
                 elif event.key == K_DOWN:
