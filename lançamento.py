@@ -10,14 +10,14 @@ pygame.init()
 FPS = 60
 fpsClock = pygame.time.Clock()
 
-# Definindo os parâmetros iniciais
-N = 10
-V_MAX = 5
-V_MIN = 0
-MASS_MIN = 20
-MASS_MAX = 40
-RATIO = 1
-WIDTH, LENGTH = 800, 480
+# Definindo os parâmetros padrões para inicialização do jogo
+N = 10 # Número de bolas
+V_MAX = 5  # Velocidade máxima
+V_MIN = 0 # Velocidade mínima
+MASS_MIN = 20  # Massa mínima das bolas
+MASS_MAX = 40  # Massa máxima das bolas
+RATIO = 1 # Fator de escala para o raio das bolas
+WIDTH, LENGTH = 800, 480  # Dimensões da janela do jogo
 window = pygame.display.set_mode((WIDTH, LENGTH), pygame.RESIZABLE)
 pygame.display.set_caption("Simulador de Colisões")
 
@@ -27,6 +27,10 @@ def gerar_cor():
 
 # Classe das bolas
 class Bola:
+    """
+    Construtor da classe Bola.
+    :parâmetro screen: Superfície onde a bola será desenhada.
+    """
     def __init__(self, screen):
         self.screen = screen
         self.color = gerar_cor()  # A cor agora é aleatória
@@ -42,6 +46,9 @@ class Bola:
         self.trajectory_lifetime = 100  # Quantidade de quadros para manter a trajetória
 
     def draw(self):
+        """
+        Desenha a bola na tela.
+        """
         pygame.draw.circle(self.screen, self.color, self.pos, self.radius)
         
         # Desenhando a massa no centro da bola
@@ -55,6 +62,9 @@ class Bola:
         self.screen.blit(speed_text, (self.pos[0] - speed_text.get_width() // 2, self.pos[1] - self.radius - 20))
 
     def move(self):
+        """
+        Move a bola de acordo com sua velocidade e atualiza sua trajetória.
+        """
         self.pos += self.v
         self.trajectory.append(self.pos.copy())  # Adiciona a posição atual à trajetória
 
@@ -65,6 +75,8 @@ class Bola:
     def manageWallCollision(self, screen_width, screen_height):
         """
         Gerencia a colisão com as paredes ajustando automaticamente às dimensões da tela.
+        :parâmetro screen_width: Largura da tela.
+        :parâmetro screen_height: Altura da tela.
         """
         if self.pos[0] + self.radius >= screen_width and self.v[0] > 0:
             self.v[0] *= -1
@@ -76,12 +88,22 @@ class Bola:
             self.v[1] *= -1
 
 def rPos(obj):
+    """
+    Gera uma posição aleatória para a bola dentro dos limites da tela.
+    :parâmetro obj: A bola para gerar a posição.
+    :return: Posição aleatória no formato pygame.math.Vector2.
+    """
     x = randint(0 + obj.radius, WIDTH - obj.radius)
     y = randint(0 + obj.radius, LENGTH - obj.radius)
     pos = pygame.math.Vector2(x, y)
     return pos
 
 def separaBolas(obj1, obj2):
+    """ 
+    Ajusta as posições das bolas para que não se sobreponham após uma colisão.
+    :parâmetro obj1: Primeira bola.
+    :parâmetro obj2: Segunda bola.
+    """
     distance = math.hypot(obj1.pos[0] - obj2.pos[0], obj1.pos[1] - obj2.pos[1])
     offset = obj1.radius + obj2.radius - distance
     dx = (obj1.pos[0] - obj2.pos[0]) / distance * offset
@@ -92,6 +114,10 @@ def separaBolas(obj1, obj2):
     obj2.pos[1] -= dy / 2
 
 def checkBallCollision(obj1, obj2):
+    """Verifica se ocorreu uma colisão entre duas bolas e, em caso afirmativo, calcula a nova velocidade.
+    :parâmetro obj1: Primeira bola.
+    :parâmetro obj2: Segunda bola.
+    """
     distance = math.hypot(obj1.pos[0] - obj2.pos[0], obj1.pos[1] - obj2.pos[1])
     if distance <= obj1.radius + obj2.radius:
         # Conservação de momento linear em 2D
@@ -116,6 +142,9 @@ def checkBallCollision(obj1, obj2):
         separaBolas(obj1, obj2)
 
 def menu_inicial():
+    """Exibe o menu inicial do jogo.
+       Permite ao usuário iniciar o jogo, acessar as configurações ou sair.
+    """
     font = pygame.font.Font(None, 48)
     texto_iniciar = font.render("Pressione Enter para Iniciar", True, (255, 255, 255))
     texto_configurar = font.render("Pressione C para Configurar", True, (255, 255, 255))
@@ -142,6 +171,8 @@ def menu_inicial():
                     sys.exit()
 
 def tela_configuracoes():
+    """Exibe a tela de configurações onde o usuário pode ajustar os parâmetros do jogo."""
+
     global MASS_MIN, MASS_MAX, V_MIN, V_MAX, N
     font = pygame.font.Font(None, 48)
     input_font = pygame.font.Font(None, 36)
