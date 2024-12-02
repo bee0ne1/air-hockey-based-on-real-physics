@@ -148,6 +148,7 @@ def tela_configuracoes():
     inputs = {
         "MASSA MIN": MASS_MIN,
         "MASSA MAX": MASS_MAX,
+        
         "VELOCIDADE MIN": V_MIN,
         "VELOCIDADE MAX": V_MAX,
         "N": N
@@ -200,10 +201,10 @@ def tela_configuracoes():
                 elif event.key == K_RIGHT:
                     inputs[keys[selected]] += 1
                 elif event.key == K_RETURN:
-                    MASS_MIN = inputs["MASS_MIN"]
-                    MASS_MAX = max(MASS_MIN, inputs["MASS_MAX"])  # Garante que MASS_MAX >= MASS_MIN
-                    V_MIN = inputs["V_MIN"]
-                    V_MAX = max(V_MIN, inputs["V_MAX"])  # Garante que V_MAX >= V_MIN
+                    MASS_MIN = inputs["MASSA MIN"]
+                    MASS_MAX = max(MASS_MIN, inputs["MASSA MAX"])  # Garante que MASS_MAX >= MASS_MIN
+                    V_MIN = inputs["VELOCIDADE MIN"]
+                    V_MAX = max(V_MIN, inputs["VELOCIDADE MAX"])  # Garante que V_MAX >= V_MIN
                     N = inputs["N"]
                     return  # Retorna ao menu principal
         render_config()
