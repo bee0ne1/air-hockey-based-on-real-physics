@@ -146,10 +146,10 @@ def tela_configuracoes():
     font = pygame.font.Font(None, 48)
     input_font = pygame.font.Font(None, 36)
     inputs = {
-        "MASS_MIN": MASS_MIN,
-        "MASS_MAX": MASS_MAX,
-        "V_MIN": V_MIN,
-        "V_MAX": V_MAX,
+        "MASSA MIN": MASS_MIN,
+        "MASSA MAX": MASS_MAX,
+        "VELOCIDADE MIN": V_MIN,
+        "VELOCIDADE MAX": V_MAX,
         "N": N
     }
     selected = 0
@@ -164,8 +164,15 @@ def tela_configuracoes():
             window.blit(value_text, (WIDTH // 4, y_pos))
             y_pos += 50
 
-        instruction_text = font.render("Use up/down para navegar, right/left para ajustar, ENTER para salvar (aperte novamente para rodar)", True, (255, 255, 255))
-        window.blit(instruction_text, (WIDTH // 8, LENGTH - 100))
+        # Texto de instrução para navegação (up/down)
+        navigation_text = input_font.render("Use up/down para navegar, left/right para alterar", True, (255, 255, 255))
+        window.blit(navigation_text, (WIDTH // 8, LENGTH - 100))
+
+        # Texto de instrução para o ENTER
+        enter_text = input_font.render("Pressione ENTER para salvar, e pressione novamente para rodar", True, (255, 255, 255))
+        window.blit(enter_text, (WIDTH // 8, LENGTH - 60))
+
+        # Atualiza a tela
         pygame.display.update()
 
     render_config()
